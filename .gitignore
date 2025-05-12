@@ -6,3 +6,4 @@
 /package.xml
 /.idea/php-test-framework.xml
 /.idea/phpspec.xml
+/.idea/.gitignore
