@@ -1,0 +1,8 @@
+/vendor/
+/.idea/modules.xml
+/.idea/parsetree.iml
+/.idea/php.xml
+/.idea/vcs.xml
+/package.xml
+/.idea/php-test-framework.xml
+/.idea/phpspec.xml
