@@ -60,7 +60,7 @@ class ParseNode
         $this->data = $data;
     }
 
-    private function constructor4(?ParseNode $parent, string $line, bool $isLeaf): void
+    private function constructor4(ParseNode|null $parent, string $line, bool $isLeaf): void
     {
         $parenthesisCount = 0;
         $childLine = "";
@@ -92,7 +92,7 @@ class ParseNode
         }
     }
 
-    public function __construct($dataOrParent, $leftOrLine = null, $rightOrIsLeaf = null)
+    public function __construct(Symbol|ParseNode|null $dataOrParent = null, string|ParseNode|null $leftOrLine = null, ParseNode|bool|null $rightOrIsLeaf = null)
     {
         $this->children = [];
         $this->parent = null;
