@@ -97,6 +97,9 @@ class ParseNode
         $this->children = [];
         $this->parent = null;
         $this->data = null;
+        if ($dataOrParent == null && $leftOrLine == null) {
+            return;
+        }
         if ($dataOrParent instanceof Symbol) {
             $this->constructor3($dataOrParent);
         } else {
