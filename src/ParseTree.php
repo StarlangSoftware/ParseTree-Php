@@ -57,7 +57,7 @@ class ParseTree
      * node according to the inorder traversal. Sets also the leafIndex attribute. LeafIndex shows the index of the
      * leaf node according to the inorder traversal without considering non-leaf nodes.
      */
-    private function updateTraversalIndexes(): void{
+    protected function updateTraversalIndexes(): void{
         $this->root->inOrderTraversal(0);
         $this->maxInOrderTraversalIndex = $this->root->maxInOrderTraversal();
     }
