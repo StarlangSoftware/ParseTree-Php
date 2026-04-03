@@ -11,6 +11,8 @@ class ParseTree
     protected ?ParseNode $root = null;
     protected string $name;
 
+    protected int $maxInOrderTraversalIndex;
+
     /**
      * Basic constructor for a ParseTree. Initializes the root node with the input.
      * @param string|ParseNode|null $rootOrFileName Root node of the tree
@@ -25,8 +27,9 @@ class ParseTree
                 $line = explode("\n", $data)[0];
                 if (str_contains($line, "(") && str_contains($line, ")")) {
                     $line = trim(mb_substr($line, mb_strpos($line, "(") + 1, mb_strrpos($line, ")") - mb_strpos($line, "(") - 1));
-                    $this->root = new ParseNode(null, $line, false);
+                    $this->root = new ParseNode(null, $line, false, 0);
                 }
+                $this->updateTraversalIndexes();
             }
         }
     }
@@ -47,6 +50,25 @@ class ParseTree
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * Sets the inOrderTraversalIndex attribute of all nodes in tree. InOrderTraversalIndex shows the index of the
+     * node according to the inorder traversal. Sets also the leafIndex attribute. LeafIndex shows the index of the
+     * leaf node according to the inorder traversal without considering non-leaf nodes.
+     */
+    private function updateTraversalIndexes(): void{
+        $this->root->inOrderTraversal(0);
+        $this->maxInOrderTraversalIndex = $this->root->maxInOrderTraversal();
+    }
+
+    /**
+     * Accessor for the maxInOrderTraversalIndex attribute
+     * @return int maxInOrderTraversalIndex attribute.
+     */
+    public function getMaxInOrderTraversalIndex(): int
+    {
+        return $this->maxInOrderTraversalIndex;
     }
 
     /**

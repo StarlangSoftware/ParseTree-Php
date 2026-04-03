@@ -9,6 +9,8 @@ class ParseNode
     protected array $children = [];
     protected ?ParseNode $parent = null;
     protected ?Symbol $data = null;
+    protected int $depth;
+    protected int $inOrderTraversalIndex;
 
     static array $ADJP = ["NNS", "QP", "NN", "$", "ADVP", "JJ", "VBN", "VBG", "ADJP", "JJR", "NP", "JJS", "DT", "FW", "RBR", "RBS", "SBAR", "RB"];
     static array $ADVP = ["RB", "RBR", "RBS", "FW", "ADVP", "TO", "CD", "JJR", "JJ", "IN", "NP", "JJS", "NN"];
@@ -60,7 +62,7 @@ class ParseNode
         $this->data = $data;
     }
 
-    private function constructor4(ParseNode|null $parent, string $line, bool $isLeaf): void
+    private function constructor4(ParseNode|null $parent, string $line, bool $isLeaf, int $depth): void
     {
         $parenthesisCount = 0;
         $childLine = "";
@@ -70,7 +72,7 @@ class ParseNode
         } else {
             $this->data = new Symbol(mb_substr($line, 1, mb_strpos($line, " ") - 1));
             if (mb_strpos($line, " ") === mb_strrpos($line, " ")) {
-                $this->children[] = new ParseNode($this, mb_substr($line, mb_strpos($line, " ") + 1, mb_strrpos($line, ")") - mb_strpos($line, " ") - 1), true);
+                $this->children[] = new ParseNode($this, mb_substr($line, mb_strpos($line, " ") + 1, mb_strrpos($line, ")") - mb_strpos($line, " ") - 1), true, $depth + 1);
             } else {
                 for ($i = mb_strpos($line, " ") + 1; $i < mb_strlen($line); $i++) {
                     if (mb_substr($line, $i, 1) != " " || $parenthesisCount > 0) {
@@ -84,7 +86,7 @@ class ParseNode
                         }
                     }
                     if ($parenthesisCount === 0 && $childLine !== "") {
-                        $this->children[] = new ParseNode($this, trim($childLine), false);
+                        $this->children[] = new ParseNode($this, trim($childLine), false, $depth + 1);
                         $childLine = "";
                     }
                 }
@@ -92,7 +94,7 @@ class ParseNode
         }
     }
 
-    public function __construct(Symbol|ParseNode|null $dataOrParent = null, string|ParseNode|null $leftOrLine = null, ParseNode|bool|null $rightOrIsLeaf = null)
+    public function __construct(Symbol|ParseNode|null $dataOrParent = null, string|ParseNode|null $leftOrLine = null, ParseNode|bool|null $rightOrIsLeaf = null, int|null $depth = null)
     {
         $this->children = [];
         $this->parent = null;
@@ -109,9 +111,64 @@ class ParseNode
                 if ($rightOrIsLeaf instanceof ParseNode) {
                     $this->constructor1($dataOrParent, $leftOrLine, $rightOrIsLeaf);
                 } else {
-                    $this->constructor4($dataOrParent, $leftOrLine, $rightOrIsLeaf);
+                    $this->depth = $depth;
+                    $this->constructor4($dataOrParent, $leftOrLine, $rightOrIsLeaf, $depth);
                 }
             }
+        }
+    }
+
+    /**
+     * Accessor for the depth attribute
+     * @return int Depth attribute
+     */
+    public function getDepth(): int
+    {
+        return $this->depth;
+    }
+
+    public function getInOrderTraversalIndex(): int{
+        return $this->inOrderTraversalIndex;
+    }
+
+    /**
+     * Recursive setter method for the inOrderTraversalIndex attribute. InOrderTraversalIndex shows the index of the
+     * node according to the inorder traversal.
+     * @param int $pos Current inorder traversal index
+     * @return int Update inorder traversal index
+     */
+    public function inOrderTraversal(int $pos): int{
+        for ($i = 0; $i < intdiv(count($this->children), 2); $i++) {
+            $pos = $this->children[$i]->inOrderTraversal($pos);
+        }
+        $this->inOrderTraversalIndex = $pos;
+        if (count($this->children) % 2 != 1) {
+            $pos++;
+        }
+        for ($i = intdiv(count($this->children), 2); $i < count($this->children); $i++) {
+            $pos = $this->children[$i]->inOrderTraversal($pos);
+        }
+        return $pos;
+    }
+
+    /**
+     * Returns the maximum inorder traversal index considering this node and all of its descendants.
+     * @return int The maximum inorder traversal index considering this node and all of its descendants.
+     */
+    public function maxInOrderTraversal(): int
+    {
+        if (count($this->children) == 0) {
+            return $this->inOrderTraversalIndex;
+        } else {
+            $maxIndex = $this->inOrderTraversalIndex;
+            for ($i = 0; $i < count($this->children); $i++) {
+                $child = $this->children[$i];
+                $childIndex = $child->maxInOrderTraversal();
+                if ($childIndex > $maxIndex) {
+                    $maxIndex = $childIndex;
+                }
+            }
+            return $maxIndex;
         }
     }
 
