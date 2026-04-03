@@ -24,6 +24,9 @@ class TreeBank
                     continue;
                 }
             }
+            if (is_dir($file)) {
+                continue;
+            }
             $parseTree = new ParseTree($folder . "/" . $file);
             if ($parseTree->getRoot() !== null) {
                 $parseTree->setName($file);
