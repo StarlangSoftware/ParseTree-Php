@@ -13,5 +13,6 @@ class TreeBankTest extends TestCase
         $treeBank2 = new TreeBank("../trees2");
         $this->assertEquals(4, $treeBank2->size());
         $this->assertEquals(18, $treeBank2->wordCount(true));
+        $treeBank3 = new TreeBank();
     }
 }

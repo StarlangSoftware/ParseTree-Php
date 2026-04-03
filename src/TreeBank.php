@@ -14,6 +14,9 @@ class TreeBank
      */
     public function __construct(?string $folder = null, ?string $pattern = null)
     {
+        if ($folder === null) {
+            return;
+        }
         $files = scandir($folder);
         foreach ($files as $file) {
             if ($pattern !== null){
