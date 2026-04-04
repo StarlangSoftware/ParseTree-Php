@@ -53,6 +53,14 @@ class ParseTree
     }
 
     /**
+     * Calculates the maximum depth of the tree.
+     * @return int The maximum depth of the tree.
+     */
+    public function maxDepth(): int{
+        return $this->root->maxDepth();
+    }
+
+    /**
      * Sets the inOrderTraversalIndex attribute of all nodes in tree. InOrderTraversalIndex shows the index of the
      * node according to the inorder traversal. Sets also the leafIndex attribute. LeafIndex shows the index of the
      * leaf node according to the inorder traversal without considering non-leaf nodes.

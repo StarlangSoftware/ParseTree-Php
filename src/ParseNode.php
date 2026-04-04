@@ -132,6 +132,21 @@ class ParseNode
     }
 
     /**
+     * Calculates the maximum depth of the subtree rooted from this node.
+     * @return int The maximum depth of the subtree rooted from this node.
+     */
+    public function maxDepth(): int
+    {
+        $depth = $this->depth;
+        foreach ($this->children as $child) {
+            if ($child->maxDepth() > $depth) {
+                $depth = $child->maxDepth();
+            }
+        }
+        return $depth;
+    }
+
+    /**
      * Recursive setter method for the inOrderTraversalIndex attribute. InOrderTraversalIndex shows the index of the
      * node according to the inorder traversal.
      * @param int $pos Current inorder traversal index
