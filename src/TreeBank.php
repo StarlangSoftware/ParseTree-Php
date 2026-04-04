@@ -17,18 +17,15 @@ class TreeBank
         if ($folder === null) {
             return;
         }
-        $files = scandir($folder);
-        foreach ($files as $file) {
-            if ($pattern !== null){
-                if (!str_contains($file, $pattern)) {
-                    continue;
-                }
+        if ($pattern == null) {
+            foreach (glob($folder . '/*.*') as $file) {
+                $parseTree = new ParseTree($file);
+                $parseTree->setName($file);
+                $this->parseTrees[] = $parseTree;
             }
-            if (is_dir($file)) {
-                continue;
-            }
-            $parseTree = new ParseTree($folder . "/" . $file);
-            if ($parseTree->getRoot() !== null) {
+        } else {
+            foreach (glob($folder . '/' . $pattern) as $file) {
+                $parseTree = new ParseTree($file);
                 $parseTree->setName($file);
                 $this->parseTrees[] = $parseTree;
             }
