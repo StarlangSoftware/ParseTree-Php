@@ -174,6 +174,14 @@ class ParseTree
     }
 
     /**
+     * Calls recursive method to remove all nodes starting with the symbol X. If the node is removed, its children are
+     * connected to the next sibling of the deleted node.
+     */
+    public function removeXNodes(): void{
+        $this->root->removeXNodes();
+    }
+
+    /**
      * Calls recursive method to remove all punctuation nodes from the tree.
      */
     public function stripPunctuation(): void

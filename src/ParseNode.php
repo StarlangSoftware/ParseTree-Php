@@ -127,7 +127,8 @@ class ParseNode
         return $this->depth;
     }
 
-    public function getInOrderTraversalIndex(): int{
+    public function getInOrderTraversalIndex(): int
+    {
         return $this->inOrderTraversalIndex;
     }
 
@@ -152,7 +153,8 @@ class ParseNode
      * @param int $pos Current inorder traversal index
      * @return int Update inorder traversal index
      */
-    public function inOrderTraversal(int $pos): int{
+    public function inOrderTraversal(int $pos): int
+    {
         for ($i = 0; $i < intdiv(count($this->children), 2); $i++) {
             $pos = $this->children[$i]->inOrderTraversal($pos);
         }
@@ -368,6 +370,26 @@ class ParseNode
         foreach ($this->children as $child) {
             $child->parent = $this;
             $child->correctParents();
+        }
+    }
+
+    /**
+     * Recursive method to remove all nodes starting with the symbol X. If the node is removed, its children are
+     * connected to the next sibling of the deleted node.
+     */
+    public function removeXNodes(): void
+    {
+        $i = 0;
+        while ($i < count($this->children)) {
+            if ($this->children[$i] instanceof ParseNode && str_starts_with($this->children[$i]->getData()->getName(), "X")) {
+                array_splice($this->children, $i + 1, 0, $this->children[$i]->children);
+                array_splice($this->children, $i, 1);
+            } else {
+                $i++;
+            }
+        }
+        foreach ($this->children as $child) {
+            $child->removeXNodes();
         }
     }
 
