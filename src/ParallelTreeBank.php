@@ -31,10 +31,18 @@ class ParallelTreeBank
         $i = 0;
         $j = 0;
         while ($i < $this->fromTreeBank->size() && $j < $this->toTreeBank->size()){
-            if ($this->fromTreeBank->get($i)->getName() < $this->toTreeBank->get($j)->getName()){
+            $name1 = $this->fromTreeBank->get($i)->getName();
+            if (str_contains($name1, "/")){
+                $name1 = substr($name1, strrpos($name1, "/") + 1);
+            }
+            $name2 = $this->toTreeBank->get($i)->getName();
+            if (str_contains($name2, "/")){
+                $name2 = substr($name2, strrpos($name2, "/") + 1);
+            }
+            if ($name1 < $name2){
                 $this->fromTreeBank->removeTree($i);
             } else {
-                if ($this->fromTreeBank->get($i)->getName() > $this->toTreeBank->get($j)->getName()){
+                if ($name1 > $name2){
                     $this->toTreeBank->removeTree($j);
                 } else {
                     $i++;

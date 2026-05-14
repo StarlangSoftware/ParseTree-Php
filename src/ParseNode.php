@@ -102,7 +102,7 @@ class ParseNode
         if ($dataOrParent == null && $leftOrLine == null) {
             return;
         }
-        if ($dataOrParent instanceof Symbol) {
+        if ($dataOrParent instanceof Symbol && $leftOrLine === null) {
             $this->constructor3($dataOrParent);
         } else {
             if ($rightOrIsLeaf === null) {
